@@ -54,23 +54,21 @@ public class DCELGenerator {
 		int offset = header_lenght+1;
 		if(sort.charAt(0) == 'f'){
 			offset += n_face;
-			if(sort.charAt(0) == 'e'){
+			if(sort.charAt(1) == 'e'){
 				offset += n_edge;
 			}
 		}
 		if(sort.charAt(0) == 'e'){
 			offset += n_edge;
-			if(sort.charAt(0) == 'f'){
+			if(sort.charAt(1) == 'f'){
 				offset += n_face;
 			}
 		}
-		int lenght = offset+n_vertex;
-		for (int i = 0; i < lenght; i++) {
+		int length = offset+n_vertex;
+		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
-			if(i >= offset){
-				vArray.add(line);
-				System.out.println(line);
-			}
+            vArray.add(line);
+            System.out.println(line);
 		}
 		return vArray;
 	}
@@ -80,23 +78,21 @@ public class DCELGenerator {
 		int offset = header_lenght+1;
 		if(sort.charAt(0) == 'v'){
 			offset += n_vertex;
-			if(sort.charAt(0) == 'e'){
+			if(sort.charAt(1) == 'e'){
 				offset += n_edge;
 			}
 		}
 		if(sort.charAt(0) == 'e'){
 			offset += n_edge;
-			if(sort.charAt(0) == 'v'){
+			if(sort.charAt(1) == 'v'){
 				offset += n_vertex;
 			}
 		}
-		int lenght = offset+n_face;
-		for (int i = 0; i < lenght; i++) {
+		int length = offset+n_face;
+		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
-			if(i >= offset){
-				fArray.add(line);
-				System.out.println(line);
-			}
+            fArray.add(line);
+            System.out.println(line);
 		}
 		return fArray;
 	}
@@ -106,23 +102,21 @@ public class DCELGenerator {
 		int offset = header_lenght+1;
 		if(sort.charAt(0) == 'v'){
 			offset += n_vertex;
-			if(sort.charAt(0) == 'f'){
+			if(sort.charAt(1) == 'f'){
 				offset += n_face;
 			}
 		}
 		if(sort.charAt(0) == 'f'){
 			offset += n_face;
-			if(sort.charAt(0) == 'v'){
+			if(sort.charAt(1) == 'v'){
 				offset += n_vertex;
 			}
 		}
-		int lenght = offset+n_edge;
-		for (int i = 0; i < lenght; i++) {
+		int length = offset+n_edge;
+		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
-			if(i >= offset){
-				eArray.add(line);
-				System.out.println(line);
-			}
+            eArray.add(line);
+            System.out.println(line);
 		}
 		return eArray;
 	}
@@ -138,7 +132,7 @@ public class DCELGenerator {
 			if (line.contains("element vertex")) {
 				line = line.substring("element vertex ".length());
 				n_vertex = Integer.parseInt(line);
-				sort = sort + "v";
+				sort += "v";
 				is_vertex_prop = true;
 				is_face_prop = false;
 				is_edge_prop = false;
@@ -146,7 +140,7 @@ public class DCELGenerator {
 			if (line.contains("element face")) {
 				line = line.substring("element face ".length());
 				n_face = Integer.parseInt(line);
-				sort = sort + "f";
+				sort += "f";
 				is_vertex_prop = false;
 				is_face_prop = true;
 				is_edge_prop = false;
@@ -154,7 +148,7 @@ public class DCELGenerator {
 			if (line.contains("element edge")) {
 				line = line.substring("element edge ".length());
 				n_edge = Integer.parseInt(line);
-				sort = sort + "e";
+				sort += "e";
 				is_vertex_prop = false;
 				is_face_prop = false;
 				is_edge_prop = true;
