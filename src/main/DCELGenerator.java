@@ -13,22 +13,123 @@ public class DCELGenerator {
 	static int face_properties = 0;
 	static int edge_properties = 0;
 
+	static int header_lenght = 0;
+
+	static ArrayList<String> vertexArray;
+	static ArrayList<String> faceArray;
+	static ArrayList<String> edgeArray;
 	static String sort = "";
 
 	public static DCELMesh generate(DCELMesh mesh) {
 		compileHeader();
-		System.out.println("////////////");
+		System.out.println("//////Vertex//////");
+		vertexArray = getVertex();
+		System.out.println("//////Face//////");
+		faceArray = getFace();
+		System.out.println("//////Edge//////");
+		edgeArray = getEdge();
+		System.out.println("//////File Info//////");
 		System.out.println("Vertex: "+n_vertex);
 		System.out.println("Face: "+n_face);
 		System.out.println("Edge: "+n_edge);
 		System.out.println("Vertex Prop: "+vertex_properties);
 		System.out.println("Face Prop: "+face_properties);
 		System.out.println("Edge Prop: "+edge_properties);
+		System.out.println("Sort: "+sort);
+		System.out.println("////////////");
+
 		return null;
+	}
+
+	private static int[] StringToInt3(String in){
+		int[] ret = new int[3];
+		ret[0] = Integer.parseInt(""+in.charAt(0));
+		ret[1] = Integer.parseInt(""+in.charAt(2));
+		ret[2] = Integer.parseInt(""+in.charAt(4));
+		return ret;
+	}
+
+	private static ArrayList<String> getVertex() {
+		ArrayList<String> vArray = new ArrayList<String>();
+		int offset = header_lenght+1;
+		if(sort.charAt(0) == 'f'){
+			offset += n_face;
+			if(sort.charAt(0) == 'e'){
+				offset += n_edge;
+			}
+		}
+		if(sort.charAt(0) == 'e'){
+			offset += n_edge;
+			if(sort.charAt(0) == 'f'){
+				offset += n_face;
+			}
+		}
+		int lenght = offset+n_vertex;
+		for (int i = 0; i < lenght; i++) {
+			String line = Loader.file.get(i);
+			if(i >= offset){
+				vArray.add(line);
+				System.out.println(line);
+			}
+		}
+		return vArray;
+	}
+
+	private static ArrayList<String> getFace() {
+		ArrayList<String> fArray = new ArrayList<String>();
+		int offset = header_lenght+1;
+		if(sort.charAt(0) == 'v'){
+			offset += n_vertex;
+			if(sort.charAt(0) == 'e'){
+				offset += n_edge;
+			}
+		}
+		if(sort.charAt(0) == 'e'){
+			offset += n_edge;
+			if(sort.charAt(0) == 'v'){
+				offset += n_vertex;
+			}
+		}
+		int lenght = offset+n_face;
+		for (int i = 0; i < lenght; i++) {
+			String line = Loader.file.get(i);
+			if(i >= offset){
+				fArray.add(line);
+				System.out.println(line);
+			}
+		}
+		return fArray;
+	}
+
+	private static ArrayList<String> getEdge() {
+		ArrayList<String> eArray = new ArrayList<String>();
+		int offset = header_lenght+1;
+		if(sort.charAt(0) == 'v'){
+			offset += n_vertex;
+			if(sort.charAt(0) == 'f'){
+				offset += n_face;
+			}
+		}
+		if(sort.charAt(0) == 'f'){
+			offset += n_face;
+			if(sort.charAt(0) == 'v'){
+				offset += n_vertex;
+			}
+		}
+		int lenght = offset+n_edge;
+		for (int i = 0; i < lenght; i++) {
+			String line = Loader.file.get(i);
+			if(i >= offset){
+				eArray.add(line);
+				System.out.println(line);
+			}
+		}
+		return eArray;
 	}
 
 	private static void compileHeader() {
 		ArrayList<String> header = Loader.getHeader();
+		header_lenght = header.size();
 		boolean is_vertex_prop = false;
 		boolean is_face_prop = false;
 		boolean is_edge_prop = false;

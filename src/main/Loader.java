@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 
 public class Loader {
-	private static ArrayList<String> file = new ArrayList<>();
+	public static ArrayList<String> file = new ArrayList<>();
 
 	public static void loadfile() {
 		readFile();
@@ -22,10 +22,9 @@ public class Loader {
 			}
 
 			try {
-				BufferedReader fileReader = new BufferedReader(new FileReader(".\\resource\\"+input));
+				BufferedReader fileReader = new BufferedReader(new FileReader("./resource/"+input));
 				String line = fileReader.readLine();
 				while (line != null){
-					System.out.println(line);
 					file.add(line);
 					line = fileReader.readLine();
 				}
