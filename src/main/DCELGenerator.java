@@ -17,7 +17,13 @@ public class DCELGenerator {
 
 	public static DCELMesh generate(DCELMesh mesh) {
 		compileHeader();
-		System.out.println(n_vertex);
+		System.out.println("////////////");
+		System.out.println("Vertex: "+n_vertex);
+		System.out.println("Face: "+n_face);
+		System.out.println("Edge: "+n_edge);
+		System.out.println("Vertex Prop: "+vertex_properties);
+		System.out.println("Face Prop: "+face_properties);
+		System.out.println("Edge Prop: "+edge_properties);
 		return null;
 	}
 
