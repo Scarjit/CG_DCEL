@@ -21,4 +21,5 @@ public class DCELMesh {
 	public ArrayList<DCELVertex> getVertexArray(){
 		return vertexArray;
 	}
+
 }

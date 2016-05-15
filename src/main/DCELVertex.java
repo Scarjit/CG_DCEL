@@ -6,13 +6,13 @@ import java.util.Map;
 
 public class DCELVertex {
 
-	private double[] position = new double[3];
+	private int[] position = new int[3];
 	private Map<String, Object> customdata;
 
 	private int id;
 	private ArrayList<DCELHalfEdge> halfEdgeArray;
 
-	public DCELVertex(double[] position, Map<String, Object> customdata) {
+	public DCELVertex(int[] position, Map<String, Object> customdata) {
 		this.position = position;
 		if (customdata != null) {
 			this.customdata = customdata;
@@ -43,11 +43,11 @@ public class DCELVertex {
 		halfEdgeArray.remove(halfEdge);
 	}
 
-	public double[] getPosition() {
+	public int[] getPosition() {
 		return position;
 	}
 
-	public void setPosition(double[] position) {
+	public void setPosition(int[] position) {
 		this.position = position;
 	}
 

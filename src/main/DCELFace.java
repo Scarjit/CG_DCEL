@@ -5,10 +5,10 @@ import java.util.ArrayList;
 public class DCELFace {
 
     private int id;
-    private ArrayList<DCELHalfEdge> halfEdgeArray;
+    private ArrayList<DCELVertex> vertex;
 
-    public DCELFace(ArrayList<DCELHalfEdge> halfEdgeArray) {
-        this.halfEdgeArray = halfEdgeArray;
+    public DCELFace(ArrayList<DCELVertex> halfEdgeArray) {
+        this.vertex = halfEdgeArray;
     }
 
     public int getId() {
@@ -19,19 +19,19 @@ public class DCELFace {
         this.id = id;
     }
 
-    public ArrayList<DCELHalfEdge> getHalfEdgeArray() {
-        return halfEdgeArray;
+    public ArrayList<DCELVertex> getvertex() {
+        return vertex;
     }
 
-    public void setHalfEdgeArray(ArrayList<DCELHalfEdge> halfEdgeArray) {
-        this.halfEdgeArray = halfEdgeArray;
+    public void setvertex(ArrayList<DCELVertex> vertex) {
+        this.vertex = vertex;
     }
 
-    public void addHalfEdgeToFace(DCELHalfEdge halfEdge) {
-        halfEdgeArray.add(halfEdge);
+    public void addvertex(DCELVertex vertex) {
+        this.vertex.add(vertex);
     }
 
-    public void removeHalfEdgeFromFace(DCELHalfEdge halfEdge) {
-        halfEdgeArray.remove(halfEdge);
+    public void removevertex(DCELHalfEdge vertex) {
+        this.vertex.remove(vertex);
     }
 }

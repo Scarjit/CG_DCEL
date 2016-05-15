@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class DCELGenerator {
@@ -15,19 +17,23 @@ public class DCELGenerator {
 
 	static int header_lenght = 0;
 
-	static ArrayList<String> vertexArray;
-	static ArrayList<String> faceArray;
-	static ArrayList<String> edgeArray;
+	static ArrayList<String> vertexArrayString;
+	static ArrayList<String> faceArrayString;
+	static ArrayList<String> edgeArrayString;
 	static String sort = "";
+
+	static ArrayList<DCELVertex> vertexArray = new ArrayList<DCELVertex>();
+	static ArrayList<DCELFace> faceArray = new ArrayList<DCELFace>();
+	static ArrayList<DCELHalfEdge> edgeArray = new ArrayList<DCELHalfEdge>();
 
 	public static DCELMesh generate(DCELMesh mesh) {
 		compileHeader();
 		System.out.println("//////Vertex//////");
-		vertexArray = getVertex();
+		vertexArrayString = getVertex();
 		System.out.println("//////Face//////");
-		faceArray = getFace();
+		faceArrayString = getFace();
 		System.out.println("//////Edge//////");
-		edgeArray = getEdge();
+		edgeArrayString = getEdge();
 		System.out.println("//////File Info//////");
 		System.out.println("Vertex: "+n_vertex);
 		System.out.println("Face: "+n_face);
@@ -38,14 +44,48 @@ public class DCELGenerator {
 		System.out.println("Sort: "+sort);
 		System.out.println("////////////");
 
-		return null;
+		generateVertex();
+		generateFace();
+
+		return mesh;
 	}
 
-	private static int[] StringToInt3(String in){
-		int[] ret = new int[3];
-		ret[0] = Integer.parseInt(""+in.charAt(0));
-		ret[1] = Integer.parseInt(""+in.charAt(2));
-		ret[2] = Integer.parseInt(""+in.charAt(4));
+	private static void generateFace() {
+		for (int i = 0; i < faceArrayString.size(); i++) {
+			int[] vertexList = StringToIntN(faceArrayString.get(i));
+			ArrayList<DCELVertex> tmpv = new ArrayList<DCELVertex>();
+			for (int j = 0; j < vertexList.length; j++) {
+				tmpv.add(vertexArray.get(j));
+			}
+			DCELFace tmpface = new DCELFace(tmpv);
+			faceArray.add(tmpface);
+			generateEdge(vertexList, tmpface);
+		}
+	}
+
+	private static void generateEdge(int[] vertexlist, DCELFace face) {
+		for (int i = 0; i < vertexlist.length; i++) {
+			
+		}
+	}
+
+	private static void generateVertex() {
+		for (int i = 0; i < vertexArrayString.size(); i++) {
+			int[] postion = StringToIntN(vertexArrayString.get(i));
+			Map<String, Object> m = new HashMap<String, Object>();
+			vertexArray.add(new DCELVertex(postion, m));
+			System.out.println("Added Vertex @: "+postion[0]+" : "+postion[1]+" : "+postion[2] + " || "+vertexArrayString.get(i));
+		}
+	}
+
+	private static int[] StringToIntN(String in){
+		int arraysize = (in.length()+1)/2;
+		int[] ret = new int[arraysize];
+		int n = 0;
+		for (int i = 0; i < arraysize*2; i = i+2) {
+			ret[n] = Integer.parseInt(""+in.charAt(i));
+			n++;
+		}
 		return ret;
 	}
 

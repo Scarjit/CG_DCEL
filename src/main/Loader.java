@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Loader {
 	public static ArrayList<String> file = new ArrayList<>();
-
+	public static String filename = "";
 	public static void loadfile() {
 		readFile();
 	}
@@ -24,6 +24,7 @@ public class Loader {
 			try {
 				BufferedReader fileReader = new BufferedReader(new FileReader("./resource/"+input));
 				String line = fileReader.readLine();
+				filename = input;
 				while (line != null){
 					file.add(line);
 					line = fileReader.readLine();
