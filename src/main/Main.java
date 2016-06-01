@@ -8,6 +8,5 @@ public class Main {
 		Loader.loadfile();
 		mesh = new DCELMesh(Loader.filename);
 		mesh = DCELGenerator.generate(mesh);
-
 	}
 }
