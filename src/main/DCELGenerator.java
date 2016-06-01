@@ -79,12 +79,12 @@ public class DCELGenerator {
 						.getOrigin() && currentEdge.getOrigin() == testTwin
 						.getNext().getOrigin()) {
 					currentEdge.setTwin(testTwin);
-					System.out.println(
+					/*System.out.println(
 							"Found Twin: " + currentEdge.getId() + " : "
 									+ testTwin.getId());
 					System.out
 							.println(currentEdge.getNext().getOrigin().getId());
-					System.out.println(testTwin.getOrigin().getId());
+					System.out.println(testTwin.getOrigin().getId());*/
 				} else {
 					//System.out.println(testTwin.getId() + " is not twin of: " + currentEdge.getId());
 				}
@@ -109,12 +109,12 @@ public class DCELGenerator {
 			}
 
 			if (prevInList.getFace().equals(currentEdge.getFace())) {
-				System.out.println("Current: " + currentEdge.getId() + " Prev: "
-						+ prevInList.getId() + " (Same Face)");
+				/*System.out.println("Current: " + currentEdge.getId() + " Prev: "
+						+ prevInList.getId() + " (Same Face)");*/
 				currentEdge.setPrev(prevInList);
 			} else {
-				System.out.println("Current: " + currentEdge.getId() + " Prev: "
-						+ startOfFace.getId());
+				/*System.out.println("Current: " + currentEdge.getId() + " Prev: "
+						+ startOfFace.getId());*/
 				currentEdge.setPrev(startOfFace);
 			}
 		}
@@ -136,12 +136,12 @@ public class DCELGenerator {
 			}
 
 			if (nextInList.getFace().equals(currentEdge.getFace())) {
-				System.out.println("Current: " + currentEdge.getId() + " Next: "
-						+ nextInList.getId() + " (Same Face)");
+				/*System.out.println("Current: " + currentEdge.getId() + " Next: "
+						+ nextInList.getId() + " (Same Face)");*/
 				currentEdge.setNext(nextInList);
 			} else {
-				System.out.println("Current: " + currentEdge.getId() + " Next: "
-						+ startOfFace.getId());
+				/*System.out.println("Current: " + currentEdge.getId() + " Next: "
+						+ startOfFace.getId());*/
 				currentEdge.setNext(startOfFace);
 			}
 		}
@@ -158,8 +158,8 @@ public class DCELGenerator {
 			for (int j = 0; j < positions[0]; j++) {
 				DCELHalfEdge cEdge = edgeArray.get(offset + j);
 				cEdge.setFace(face);
-				System.out.println(
-						"Added Face: " + face.getId() + " to " + cEdge.getId());
+				/*System.out.println(
+						"Added Face: " + face.getId() + " to " + cEdge.getId());*/
 			}
 			offset = offset + positions[0];
 		}
@@ -183,9 +183,9 @@ public class DCELGenerator {
 		HashMap<DCELHalfEdge, int[]> tempHalfEdgeList = new HashMap<>();
 		for (int i = 0; i < edgeArrayString.size(); i++) {
 			int[] position = StringToIntN(edgeArrayString.get(i));
-			System.out.println(
+			/*System.out.println(
 					"Edge " + i + " connects " + position[0] + " and "
-							+ position[1]);
+							+ position[1]);*/
 			DCELHalfEdge currentEdge = new DCELHalfEdge(null, null, null,
 					vertexArray.get(position[0]), null);
 			tempHalfEdgeList.put(currentEdge, position);
@@ -207,9 +207,9 @@ public class DCELGenerator {
 			DCELVertex cvertex = new DCELVertex(postion, m, null);
 			cvertex.setId(i);
 			vertexArray.add(cvertex);
-			System.out.println(
+			/*System.out.println(
 					"Added Vertex @: " + postion[0] + " : " + postion[1] + " : "
-							+ postion[2] + " || " + vertexArrayString.get(i));
+							+ postion[2] + " || " + vertexArrayString.get(i));*/
 		}
 	}
 
@@ -250,7 +250,7 @@ public class DCELGenerator {
 		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
 			vArray.add(line);
-			System.out.println(line);
+			//System.out.println(line);
 		}
 		return vArray;
 	}
@@ -274,7 +274,7 @@ public class DCELGenerator {
 		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
 			fArray.add(line);
-			System.out.println(line);
+			//System.out.println(line);
 		}
 		return fArray;
 	}
