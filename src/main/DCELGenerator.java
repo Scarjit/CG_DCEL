@@ -52,14 +52,14 @@ public class DCELGenerator {
 
 	private static void generateFace() {
 		for (int i = 0; i < faceArrayString.size(); i++) {
-			int[] vertexList = StringToIntN(faceArrayString.get(i));
+			/*int[] vertexList = StringToIntN(faceArrayString.get(i));
 			ArrayList<DCELVertex> tmpv = new ArrayList<DCELVertex>();
 			for (int j = 0; j < vertexList.length; j++) {
 				tmpv.add(vertexArray.get(j));
 			}
-			DCELFace tmpface = new DCELFace(tmpv);
+			//DCELFace tmpface = new DCELFace(vertexArray.get(0));
 			faceArray.add(tmpface);
-			generateEdge(vertexList, tmpface);
+			generateEdge(vertexList, tmpface);*/
 		}
 	}
 
@@ -79,14 +79,22 @@ public class DCELGenerator {
 	}
 
 	private static int[] StringToIntN(String in){
-		int arraysize = (in.length()+1)/2;
+
+
+		String[] stringRet = in.split(" ");
+		int[] retArray = new int[stringRet.length];
+		for (int i = 0; i < stringRet.length; i++) {
+			retArray[i] = Integer.parseInt(stringRet[i]);
+		}
+
+		/*int arraysize = (in.length()+1)/2;
 		int[] ret = new int[arraysize];
 		int n = 0;
 		for (int i = 0; i < arraysize*2; i = i+2) {
 			ret[n] = Integer.parseInt(""+in.charAt(i));
 			n++;
-		}
-		return ret;
+		}*/
+		return retArray;
 	}
 
 	private static ArrayList<String> getVertex() {

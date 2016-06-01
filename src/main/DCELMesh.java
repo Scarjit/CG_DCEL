@@ -1,25 +1,23 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DCELMesh {
-	private ArrayList<DCELVertex> vertexArray;
+
+	private List<DCELHalfEdge> edges;
+	private List<DCELFace> faces;
+
+	public DCELMesh() {
+		edges = new ArrayList<DCELHalfEdge>();
+		faces = new ArrayList<DCELFace>();
+	}
+
 
 	public DCELMesh(String Name){
 		System.out.println("Creating new Mesh: "+Name);
 	}
 
-	public void addVertex(DCELVertex vertex){
-		vertexArray.add(vertex);
-	}
-
-	public void removeVertex(DCELVertex vertex){
-		vertexArray.remove(vertex);
-	}
-
-	public ArrayList<DCELVertex> getVertexArray(){
-		return vertexArray;
-	}
 
 }
