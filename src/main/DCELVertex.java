@@ -1,21 +1,20 @@
 package main;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 
 public class DCELVertex {
 
-	private int[] position = new int[3];
-	private Map<String, Object> customdata;
+	private Double[] position = new Double[3];
+	private Map<String, Object> customData;
 
 	private int id;
 	private DCELHalfEdge halfEdge;
 
-	public DCELVertex(int[] position, Map<String, Object> customdata, DCELHalfEdge halfEdge) {
+	public DCELVertex(Double[] position, Map<String, Object> customdata, DCELHalfEdge halfEdge) {
 		this.position = position;
 		if (customdata != null) {
-			this.customdata = customdata;
+			this.customData = customdata;
 		}
 		this.halfEdge = halfEdge;
 	}
@@ -36,19 +35,19 @@ public class DCELVertex {
 		this.halfEdge = halfEdge;
 	}
 
-	public int[] getPosition() {
+	public Double[] getPosition() {
 		return position;
 	}
 
-	public void setPosition(int[] position) {
+	public void setPosition(Double[] position) {
 		this.position = position;
 	}
 
 	public Map<String, Object> getCustomdata() {
-		return customdata;
+		return customData;
 	}
 
-	public void setCustomdata(Map<String, Object> customdata) {
-		this.customdata = customdata;
+	public void setCustomdata(Map<String, Object> customData) {
+		this.customData = customData;
 	}
 }

@@ -156,8 +156,8 @@ public class DCELGenerator {
 			face.setId(i);
 			faceArray.add(face);
 			for (int j = 0; j < positions[0]; j++) {
-				DCELHalfEdge cEdge = edgeArray.get(offset + j);
-				cEdge.setFace(face);
+				DCELHalfEdge currentEdge = edgeArray.get(offset + j);
+				currentEdge.setFace(face);
 				/*System.out.println(
 						"Added Face: " + face.getId() + " to " + cEdge.getId());*/
 			}
@@ -180,7 +180,7 @@ public class DCELGenerator {
 	}
 
 	private static void generateEdge() {
-		HashMap<DCELHalfEdge, int[]> tempHalfEdgeList = new HashMap<>();
+		Map<DCELHalfEdge, int[]> tempHalfEdgeList = new HashMap<>();
 		for (int i = 0; i < edgeArrayString.size(); i++) {
 			int[] position = StringToIntN(edgeArrayString.get(i));
 			/*System.out.println(
@@ -193,41 +193,43 @@ public class DCELGenerator {
 			edgeArray.add(currentEdge);
 		}
 
+
+		//TODO: unötig oder?:
 		for (int i = 0; i < edgeArray.size(); i++) {
 			DCELHalfEdge currentEdge = edgeArray.get(i);
 			int[] currentPos = tempHalfEdgeList.get(currentEdge);
-
 		}
 	}
 
 	private static void generateVertex() {
 		for (int i = 0; i < vertexArrayString.size(); i++) {
-			int[] postion = StringToIntN(vertexArrayString.get(i));
-			Map<String, Object> m = new HashMap<String, Object>();
-			DCELVertex cvertex = new DCELVertex(postion, m, null);
-			cvertex.setId(i);
-			vertexArray.add(cvertex);
+			Double[] position = StringToDoubleN(vertexArrayString.get(i));
+			Map<String, Object> customData = new HashMap<String, Object>();
+			DCELVertex currentVertex = new DCELVertex(position, customData, null);
+			currentVertex.setId(i);
+			vertexArray.add(currentVertex);
 			/*System.out.println(
 					"Added Vertex @: " + postion[0] + " : " + postion[1] + " : "
 							+ postion[2] + " || " + vertexArrayString.get(i));*/
 		}
 	}
 
-	private static int[] StringToIntN(String in) {
+	private static Double[] StringToDoubleN(String in) {
 
+		String[] stringRet = in.split(" ");
+		Double[] retArray = new Double[stringRet.length];
+		for (int i = 0; i < stringRet.length; i++) {
+			retArray[i] = Double.parseDouble(stringRet[i]);
+		}
+		return retArray;
+	}
+
+	private static int[] StringToIntN(String in) {
 		String[] stringRet = in.split(" ");
 		int[] retArray = new int[stringRet.length];
 		for (int i = 0; i < stringRet.length; i++) {
 			retArray[i] = Integer.parseInt(stringRet[i]);
 		}
-
-		/*int arraysize = (in.length()+1)/2;
-		int[] ret = new int[arraysize];
-		int n = 0;
-		for (int i = 0; i < arraysize*2; i = i+2) {
-			ret[n] = Integer.parseInt(""+in.charAt(i));
-			n++;
-		}*/
 		return retArray;
 	}
 
@@ -250,7 +252,6 @@ public class DCELGenerator {
 		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
 			vArray.add(line);
-			//System.out.println(line);
 		}
 		return vArray;
 	}
@@ -274,7 +275,6 @@ public class DCELGenerator {
 		for (int i = offset; i < length; i++) {
 			String line = Loader.file.get(i);
 			fArray.add(line);
-			//System.out.println(line);
 		}
 		return fArray;
 	}
