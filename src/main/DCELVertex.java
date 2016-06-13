@@ -1,17 +1,18 @@
 package main;
 
+import java.util.Arrays;
 import java.util.Map;
 
 
 public class DCELVertex {
 
-	private Double[] position = new Double[3];
+	private float[] position = new float[3];
 	private Map<String, Object> customData;
 
 	private int id;
 	private DCELHalfEdge halfEdge;
 
-	public DCELVertex(Double[] position, Map<String, Object> customdata, DCELHalfEdge halfEdge) {
+	public DCELVertex(float[] position, Map<String, Object> customdata, DCELHalfEdge halfEdge) {
 		this.position = position;
 		if (customdata != null) {
 			this.customData = customdata;
@@ -35,11 +36,11 @@ public class DCELVertex {
 		this.halfEdge = halfEdge;
 	}
 
-	public Double[] getPosition() {
+	public float[] getPosition() {
 		return position;
 	}
 
-	public void setPosition(Double[] position) {
+	public void setPosition(float[] position) {
 		this.position = position;
 	}
 
@@ -49,5 +50,12 @@ public class DCELVertex {
 
 	public void setCustomdata(Map<String, Object> customData) {
 		this.customData = customData;
+	}
+
+	@Override
+	public String toString() {
+		return "DCELVertex{" +
+				"position=" + Arrays.toString(position) +
+				'}';
 	}
 }

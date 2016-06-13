@@ -25,6 +25,7 @@ public class DCELGenerator {
 	static ArrayList<DCELVertex> vertexArray = new ArrayList<DCELVertex>();
 	static ArrayList<DCELFace> faceArray = new ArrayList<DCELFace>();
 	static ArrayList<DCELHalfEdge> edgeArray = new ArrayList<DCELHalfEdge>();
+	static ArrayList<Integer> indicesForEdges = new ArrayList<Integer>();
 
 	public static DCELMesh generate(DCELMesh mesh) {
 		compileHeader();
@@ -52,6 +53,11 @@ public class DCELGenerator {
 		setPrevEdge();
 		setTwinEdge();
 		setRandomHalfEdgeToVertex();
+
+		mesh.setVertices(vertexArray);
+		mesh.setEdges(edgeArray);
+		mesh.setFaces(faceArray);
+		mesh.setIndicesForEdges(indicesForEdges);
 
 		return mesh;
 	}
@@ -186,6 +192,10 @@ public class DCELGenerator {
 			/*System.out.println(
 					"Edge " + i + " connects " + position[0] + " and "
 							+ position[1]);*/
+
+			indicesForEdges.add(position[0]);
+			indicesForEdges.add(position[1]);
+
 			DCELHalfEdge currentEdge = new DCELHalfEdge(null, null, null,
 					vertexArray.get(position[0]), null);
 			tempHalfEdgeList.put(currentEdge, position);
@@ -203,7 +213,7 @@ public class DCELGenerator {
 
 	private static void generateVertex() {
 		for (int i = 0; i < vertexArrayString.size(); i++) {
-			Double[] position = StringToDoubleN(vertexArrayString.get(i));
+			float[] position = StringToFloatN(vertexArrayString.get(i));
 			Map<String, Object> customData = new HashMap<String, Object>();
 			DCELVertex currentVertex = new DCELVertex(position, customData, null);
 			currentVertex.setId(i);
@@ -214,12 +224,11 @@ public class DCELGenerator {
 		}
 	}
 
-	private static Double[] StringToDoubleN(String in) {
-
+	private static float[] StringToFloatN(String in) {
 		String[] stringRet = in.split(" ");
-		Double[] retArray = new Double[stringRet.length];
+		float[] retArray = new float[stringRet.length];
 		for (int i = 0; i < stringRet.length; i++) {
-			retArray[i] = Double.parseDouble(stringRet[i]);
+			retArray[i] = Float.parseFloat(stringRet[i]);
 		}
 		return retArray;
 	}
