@@ -25,7 +25,7 @@ public class DCELGenerator {
 	static ArrayList<DCELVertex> vertexArray = new ArrayList<DCELVertex>();
 	static ArrayList<DCELFace> faceArray = new ArrayList<DCELFace>();
 	static ArrayList<DCELHalfEdge> edgeArray = new ArrayList<DCELHalfEdge>();
-	static ArrayList<Integer> indicesForEdges = new ArrayList<Integer>();
+	static ArrayList<Integer[]> indicesForEdges = new ArrayList<Integer[]>();
 
 	public static DCELMesh generate(DCELMesh mesh) {
 		compileHeader();
@@ -191,10 +191,15 @@ public class DCELGenerator {
 			int[] position = StringToIntN(edgeArrayString.get(i));
 			/*System.out.println(
 					"Edge " + i + " connects " + position[0] + " and "
-							+ position[1]);*/
+							+ position[1])*/
 
-			indicesForEdges.add(position[0]);
-			indicesForEdges.add(position[1]);
+
+			if (position[0] < position[1]) {
+				Integer[] indice = new Integer[2];
+				indice[0] = position[0];
+				indice[1] = position[1];
+				indicesForEdges.add(indice);
+			}
 
 			DCELHalfEdge currentEdge = new DCELHalfEdge(null, null, null,
 					vertexArray.get(position[0]), null);

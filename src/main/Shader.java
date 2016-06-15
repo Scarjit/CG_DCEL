@@ -35,7 +35,7 @@ public class Shader {
                     "in vec4 Color;" +
                     "layout ( location = 0 ) out vec4 outColor;" +
                     "void main(void) {" +
-                    "    outColor = Color;" +
+                    "    outColor = vec4(1.0,0.0,0.0,1.0);" +
                     "}"
     );
 

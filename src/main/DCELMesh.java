@@ -9,7 +9,7 @@ public class DCELMesh {
 	private List<DCELVertex> vertices;
 	private List<DCELHalfEdge> edges;
 	private List<DCELFace> faces;
-	private List<Integer> indicesForEdges;
+	private List<Integer[]> indicesForEdges;
 
 
 	public DCELMesh() {
@@ -42,11 +42,11 @@ public class DCELMesh {
 		this.faces = faces;
 	}
 
-	public List<Integer> getIndicesForEdges() {
+	public List<Integer[]> getIndicesForEdges() {
 		return indicesForEdges;
 	}
 
-	public void setIndicesForEdges(List<Integer> indicesForEdges) {
+	public void setIndicesForEdges(ArrayList<Integer[]> indicesForEdges) {
 		this.indicesForEdges = indicesForEdges;
 	}
 

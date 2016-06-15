@@ -30,6 +30,8 @@ public class Geometry {
     // Vertex Array Object
     private static int vao[];
 
+    private static int numHalfEdges;
+
     /**
      * Konstruktur, Erzeugt die Geometrie
      */
@@ -78,9 +80,10 @@ public class Geometry {
 
     public Geometry(DCELMesh mesh) {
 
-        List<DCELVertex> verticesList = mesh.getVertices();
-        List<Integer> indicesForEdgesList = mesh.getIndicesForEdges();
+        System.out.println("Num of Halfedges: " + mesh.getEdges().size());
+        numHalfEdges = mesh.getEdges().size();
 
+        List<DCELVertex> verticesList = mesh.getVertices();
         float[] verticesArray = new float[verticesList.size() * 3];
 
         int verticesArrayCounter = 0;
@@ -90,12 +93,19 @@ public class Geometry {
             verticesArray[verticesArrayCounter++] = vertex.getPosition()[2];
         }
 
-        int[] indicesForEdgesArray = new int[indicesForEdgesList.size()];
+        List<Integer[]> indicesForEdgesList = mesh.getIndicesForEdges();
 
+        System.out.println("Num of Edges: " + indicesForEdgesList.size());
+
+        int[] indicesForEdgesArray = new int[numHalfEdges];
+
+        //indicesForEdgesCounter:
+        int k = 0;
         for (int i = 0; i < indicesForEdgesArray.length; i++) {
-            indicesForEdgesArray[i] = indicesForEdgesList.get(i);
-            System.out.println(indicesForEdgesList.get(i));
-
+            indicesForEdgesArray[i] = indicesForEdgesList.get(k)[0];
+            indicesForEdgesArray[i + 1] = indicesForEdgesList.get(k)[1];
+            i++;
+            k++;
         }
 
         float[] allWhite = new float[verticesArray.length];
@@ -187,7 +197,7 @@ public class Geometry {
         // verwende 24 Punkte um Linien zwischen jeweils zwei Punkten zu zeichnen.
         // starte bei Offset 0 in GL_ELEMENT_ARRAY_BUFFER
         gl.glBindBuffer(GL4.GL_ELEMENT_ARRAY_BUFFER, triangleVertexPositionBuffer[1]);
-        gl.glDrawElements(GL4.GL_LINES, /*size*/ 24, GL4.GL_UNSIGNED_INT, /* offset */ 0);
+        gl.glDrawElements(GL4.GL_LINES, /*size*/ numHalfEdges, GL4.GL_UNSIGNED_INT, /* offset */ 0);
 
         // Alternative: zeichne die ersten 6 Punkte aus der Vertexliste, ignoriert die Indexliste
         //gl.glDrawArrays( GL4.GL_LINES, /* start index */ 0, /* size */ 6);
