@@ -181,7 +181,6 @@ public class DCELGenerator {
 					edgeArrayString.add(positions[j] + " " + positions[1]);
 				}
 			}
-
 		}
 	}
 

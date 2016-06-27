@@ -4,6 +4,8 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -41,6 +43,7 @@ public class SimpleScene {
         }
     }
 
+
     /**
      * Hauptprogramm, initialisiert die Fenster
      *
@@ -53,11 +56,21 @@ public class SimpleScene {
         mesh = new DCELMesh(Loader.filename);
         mesh = DCELGenerator.generate(mesh);
 
-        // create the camera
-        myCamera = new Camera();
-
         // Create the geometry object
         myGeometry = new Geometry(mesh);
+
+        // create the camera
+
+        float largestCoordNum = 0;
+
+        for (float vertex : myGeometry.getVertices().array()) {
+            if (vertex > largestCoordNum) {
+                largestCoordNum = vertex;
+            }
+        }
+
+        myCamera = new Camera(-largestCoordNum / 2, -largestCoordNum / 2, largestCoordNum / 2);
+
         myShader = new Shader();
 
 
@@ -69,7 +82,7 @@ public class SimpleScene {
         // Erstellen des Hauptfensters
         Frame frame = new Frame("HTWK Computergrafik");
 
-        frame.setSize(300, 300);
+        frame.setSize(500, 500);
 
         // OpenGL-Canvas hinzufuegen
         frame.add(glcanvas);
@@ -156,5 +169,53 @@ public class SimpleScene {
                 System.exit(0);
             }
         });
+
+
+        float finalLargestCoordNum = largestCoordNum;
+        frame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+                int keyCode = e.getKeyCode();
+
+                float moveX = myCamera.getModelViewMatrix().array()[12];
+                float moveY = myCamera.getModelViewMatrix().array()[13];
+                float moveZ = myCamera.getModelViewMatrix().array()[14];
+
+                float moveStep = finalLargestCoordNum / 100;
+
+                //System.out.println(moveStep);
+
+                switch (keyCode) {
+                    case KeyEvent.VK_UP:
+                        if (e.isControlDown()) {
+                            myCamera.setModelViewMatrix(moveX, moveY, moveZ - moveStep);
+                        } else {
+                            myCamera.setModelViewMatrix(moveX, moveY - moveStep, moveZ);
+                        }
+                        glcanvas.display();
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (e.isControlDown()) {
+                            myCamera.setModelViewMatrix(moveX, moveY, moveZ + moveStep);
+                        } else {
+                            myCamera.setModelViewMatrix(moveX, moveY + moveStep, moveZ);
+                        }
+                        glcanvas.display();
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        myCamera.setModelViewMatrix(moveX + moveStep, moveY, moveZ);
+                        glcanvas.display();
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        myCamera.setModelViewMatrix(moveX - moveStep, moveY, moveZ);
+                        glcanvas.display();
+                        break;
+                }
+
+                //System.out.println(Arrays.toString(myCamera.getModelViewMatrix().array()));
+            }
+        });
+
     }
 }

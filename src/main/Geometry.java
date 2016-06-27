@@ -111,7 +111,7 @@ public class Geometry {
         float[] allWhite = new float[verticesArray.length];
 
         for (int i = 0; i < allWhite.length; i++) {
-            if (i % 7 == 0) {
+            /*if (i % 7 == 0) {
                 allWhite[i] = 0.0f;
             } else if (i % 7 == 0) {
                 allWhite[i] = 1.0f;
@@ -123,7 +123,9 @@ public class Geometry {
                 allWhite[i] = 0.0f;
             } else {
                 allWhite[i] = 1.0f;
-            }
+            }*/
+
+            allWhite[i] = 1.0f;
 
         }
 
@@ -204,5 +206,14 @@ public class Geometry {
 
         gl.glBindVertexArray(0);
         SimpleScene.checkGLError(gl, "Geometry end of of display");
+    }
+
+
+    public FloatBuffer getVertices() {
+        return vertices;
+    }
+
+    public void setVertices(FloatBuffer vertices) {
+        this.vertices = vertices;
     }
 }

@@ -1,6 +1,7 @@
 package main;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 /**
  * Klasse zum Halten der Kamerainformation
@@ -8,9 +9,17 @@ import java.nio.FloatBuffer;
 public class Camera {
 
     FloatBuffer mypmatrix;
+
+    @Override
+    public String toString() {
+        return "Camera{" +
+                "mymvmatrix=" + Arrays.toString(mymvmatrix.array()) +
+                '}';
+    }
+
     FloatBuffer mymvmatrix;
 
-    Camera() {
+    Camera(float moveX, float moveY, float moveZ) {
         // Anlegen der aktuellen Matrizen fuer die Anzeige
         mypmatrix = FloatBuffer.wrap(
                 new float[]{
@@ -25,9 +34,10 @@ public class Camera {
                 new float[]{1.0f, 0.0f, 0.0f, 0.0f,
                         0.0f, 1.0f, 0.0f, 0.0f,
                         0.0f, 0.0f, -1.0f, 0.0f,
-                        -700.0f, -700.0f, 0.0f, 700.0f
+                        moveX, moveY, moveZ, 0.0f
                 });
     }
+
 
     /**
      * Gibt die aktuelle Model View Matrix zurück
@@ -36,6 +46,15 @@ public class Camera {
      */
     public FloatBuffer getModelViewMatrix() {
         return mymvmatrix;
+    }
+
+    public void setModelViewMatrix(float moveX, float moveY, float moveZ) {
+        this.mymvmatrix = FloatBuffer.wrap(
+                new float[]{1.0f, 0.0f, 0.0f, 0.0f,
+                        0.0f, 1.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, -1.0f, 0.0f,
+                        moveX, moveY, moveZ, 0.0f
+                });
     }
 
     /**
