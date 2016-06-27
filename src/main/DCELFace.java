@@ -1,11 +1,10 @@
 package main;
 
-import java.util.ArrayList;
-
 public class DCELFace {
 
     private int id;
     private DCELHalfEdge halfEdge;
+    private float[] faceNormal = new float[3];
 
     public DCELFace(DCELHalfEdge halfEdge) {
         this.halfEdge = halfEdge;
@@ -25,6 +24,14 @@ public class DCELFace {
 
     public void setHalfEdge(DCELHalfEdge halfEdge) {
         this.halfEdge = halfEdge;
+    }
+
+    public float[] getFaceNormal() {
+        return faceNormal;
+    }
+
+    public void setFaceNormal(float[] faceNormal) {
+        this.faceNormal = faceNormal;
     }
 
 }

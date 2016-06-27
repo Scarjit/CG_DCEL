@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import java.util.Map;
 public class DCELVertex {
 
 	private float[] position = new float[3];
+	private ArrayList<float[]> faceNormals = new ArrayList<float[]>();
 	private Map<String, Object> customData;
 
 	private int id;
@@ -52,10 +54,30 @@ public class DCELVertex {
 		this.customData = customData;
 	}
 
+	public ArrayList<float[]> getFaceNormals() {
+		return faceNormals;
+	}
+
+	public void setFaceNormals(ArrayList<float[]> faceNormals) {
+		this.faceNormals = faceNormals;
+	}
+
+	public void addFaceNormal(float[] faceNormal) {
+		this.faceNormals.add(faceNormal);
+	}
+
 	@Override
 	public String toString() {
+
+		String faceNormalsString = "";
+
+		for (float[] faceNormal : faceNormals) {
+			faceNormalsString += Arrays.toString(faceNormal) + "\r\n";
+		}
+
 		return "DCELVertex{" +
 				"position=" + Arrays.toString(position) +
-				'}';
+				"faceNormals" + faceNormalsString +
+				"}\r\n";
 	}
 }

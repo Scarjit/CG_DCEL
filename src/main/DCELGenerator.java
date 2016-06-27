@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,13 +54,87 @@ public class DCELGenerator {
 		setPrevEdge();
 		setTwinEdge();
 		setRandomHalfEdgeToVertex();
+		setFaceNormal();
+		setVertexNormal();
 
 		mesh.setVertices(vertexArray);
 		mesh.setEdges(edgeArray);
 		mesh.setFaces(faceArray);
 		mesh.setIndicesForEdges(indicesForEdges);
 
+		//System.out.println(vertexArray.toString());
+
 		return mesh;
+	}
+
+	private static void setVertexNormal() {
+
+
+	}
+
+	private static void setFaceNormal() {
+
+		ArrayList<float[]> triangle = new ArrayList<float[]>();
+		float[] cross1 = new float[3];
+		float[] cross2 = new float[3];
+		float[] vResult = new float[3];
+
+
+		for (DCELFace face : faceArray) {
+			triangle.add(0, face.getHalfEdge().getOrigin().getPosition());
+			triangle.add(1, face.getHalfEdge().getNext().getOrigin().getPosition());
+			triangle.add(2, face.getHalfEdge().getPrev().getOrigin().getPosition());
+			/*System.out.println("origin: " + Arrays.toString(triangle.get(0)));
+			System.out.println("next:   " + Arrays.toString(triangle.get(1)));
+			System.out.println("prev:   " + Arrays.toString(triangle.get(2)));*/
+
+
+			float x1 = triangle.get(0)[0];
+			float y1 = triangle.get(0)[1];
+			float z1 = triangle.get(0)[2];
+
+			float x2 = triangle.get(1)[0];
+			float y2 = triangle.get(1)[1];
+			float z2 = triangle.get(1)[2];
+
+			float x3 = triangle.get(2)[0];
+			float y3 = triangle.get(2)[1];
+			float z3 = triangle.get(2)[2];
+
+			cross1[0] = x2 - x1;
+			cross1[1] = y2 - y1;
+			cross1[2] = z2 - z1;
+
+			cross2[0] = x3 - x1;
+			cross2[1] = y3 - y1;
+			cross2[2] = z3 - z1;
+
+			vResult = crossProduct(cross1, cross2, vResult);
+
+			face.setFaceNormal(vResult);
+
+			DCELHalfEdge currHalfEdge = face.getHalfEdge();
+
+			System.out.println(Arrays.toString(vResult));
+
+			do {
+
+				//System.out.println(face.toString());
+				currHalfEdge.getOrigin().addFaceNormal(vResult);
+
+				currHalfEdge = currHalfEdge.getNext();
+			} while ((face.getHalfEdge() != currHalfEdge));
+		}
+
+	}
+
+	private static float[] crossProduct(float[] v1, float[] v2, float[] vR) {
+
+		vR[0] = ((v1[1] * v2[2]) - (v1[2] * v2[1]));
+		vR[1] = -((v1[0] * v2[2]) - (v1[2] * v2[0]));
+		vR[2] = ((v1[0] * v2[1]) - (v1[1] * v2[0]));
+
+		return vR;
 	}
 
 	private static void setRandomHalfEdgeToVertex() {
