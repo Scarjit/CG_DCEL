@@ -1,6 +1,10 @@
 package main;
 
-import com.jogamp.opengl.*;
+import com.jogamp.opengl.GL4;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 
 import java.awt.*;
@@ -31,7 +35,8 @@ public class SimpleScene {
      * Hilfsfunkton zum Testen und Ausgeben von OpenGL-Fehlern
      *
      * @param gl    Das OpenGL Profil
-     * @param where Information über die position im Quelltext, die bei einem Fehler mit ausgegeben wird
+     * @param where Information über die position im Quelltext, die bei einem Fehler mit ausgegeben
+     *              wird
      */
     public static void checkGLError(GL4 gl, String where) {
         int error;
@@ -69,6 +74,8 @@ public class SimpleScene {
             }
         }
 
+        System.out.println("largestCoordNum = " + largestCoordNum);
+
         myCamera = new Camera(-largestCoordNum / 2, -largestCoordNum / 2, largestCoordNum / 2);
 
         myShader = new Shader();
@@ -82,7 +89,11 @@ public class SimpleScene {
         // Erstellen des Hauptfensters
         Frame frame = new Frame("HTWK Computergrafik");
 
-        frame.setSize(500, 500);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
+        frame.setResizable(false);
+        frame.setUndecorated(true);
+        //frame.setAlwaysOnTop(true);
 
         // OpenGL-Canvas hinzufuegen
         frame.add(glcanvas);
@@ -108,16 +119,19 @@ public class SimpleScene {
              *  Initialisierung, wird einmal beim Erstellen des Fensters aufgerufen und erzeugt die 
              *  Puffer bzw. initialisiert alle OpenGL Datenstrukturen
              */
+
+
             @Override
             public void init(GLAutoDrawable glautodrawable) {
                 GL4 gl2 = glautodrawable.getGL().getGL4();
-
                 checkGLError(gl2, "start of init");
 
                 myShader.initShader(gl2);
                 myGeometry.initBuffers(gl2);
 
                 checkGLError(gl2, "end of init");
+
+
             }
 
 
@@ -151,11 +165,9 @@ public class SimpleScene {
 
                 checkGLError(gl2, "after matrices");
 
-
                 // zeichnet die eigene Geometrie
                 myGeometry.display(gl2);
 
-                checkGLError(gl2, "end of display");
             }
         });
 
@@ -188,19 +200,11 @@ public class SimpleScene {
 
                 switch (keyCode) {
                     case KeyEvent.VK_UP:
-                        if (e.isControlDown()) {
-                            myCamera.setModelViewMatrix(moveX, moveY, moveZ - moveStep);
-                        } else {
-                            myCamera.setModelViewMatrix(moveX, moveY - moveStep, moveZ);
-                        }
+                        myCamera.setModelViewMatrix(moveX, moveY - moveStep, moveZ);
                         glcanvas.display();
                         break;
                     case KeyEvent.VK_DOWN:
-                        if (e.isControlDown()) {
-                            myCamera.setModelViewMatrix(moveX, moveY, moveZ + moveStep);
-                        } else {
-                            myCamera.setModelViewMatrix(moveX, moveY + moveStep, moveZ);
-                        }
+                        myCamera.setModelViewMatrix(moveX, moveY + moveStep, moveZ);
                         glcanvas.display();
                         break;
                     case KeyEvent.VK_LEFT:
@@ -211,9 +215,25 @@ public class SimpleScene {
                         myCamera.setModelViewMatrix(moveX - moveStep, moveY, moveZ);
                         glcanvas.display();
                         break;
+
                 }
 
-                //System.out.println(Arrays.toString(myCamera.getModelViewMatrix().array()));
+            }
+        });
+
+
+        frame.addMouseWheelListener(e -> {
+            float moveX = myCamera.getModelViewMatrix().array()[12];
+            float moveY = myCamera.getModelViewMatrix().array()[13];
+            float moveZ = myCamera.getModelViewMatrix().array()[14];
+            float moveStep = finalLargestCoordNum / 100;
+
+            if (e.getWheelRotation() == -1) {
+                myCamera.setModelViewMatrix(moveX, moveY, moveZ - moveStep);
+                glcanvas.display();
+            } else {
+                myCamera.setModelViewMatrix(moveX, moveY, moveZ + moveStep);
+                glcanvas.display();
             }
         });
 

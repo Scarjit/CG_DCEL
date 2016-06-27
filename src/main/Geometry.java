@@ -9,9 +9,8 @@ import java.util.List;
 
 
 /**
- * Klasse zum Halten der Geometrieinformation
- * <p>
- * Hier werden alle Puffer verwaltet, die ausschließlich für die Geometriebehandlung notwendig sind
+ * Klasse zum Halten der Geometrieinformation <p> Hier werden alle Puffer verwaltet, die
+ * ausschließlich für die Geometriebehandlung notwendig sind
  */
 public class Geometry {
 
@@ -144,7 +143,6 @@ public class Geometry {
     /**
      * Legt die notwendigen Puffer auf der Grafikkarte an und füllt diese
      *
-     * @param gl
      * @pre initBuffers darf zuvor nicht ausgeführt worden sein
      * @post die Puffer sind angelegt und initialisiert
      */
@@ -178,7 +176,6 @@ public class Geometry {
     /**
      * Zeichnet das Objekt
      *
-     * @param gl
      * @pre initBuffers muss im gleichen Kontext vorher ausgeführt worden sein
      */
     public void display(GL4 gl) {
