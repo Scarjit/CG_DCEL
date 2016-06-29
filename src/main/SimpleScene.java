@@ -1,10 +1,6 @@
 package main;
 
-import com.jogamp.opengl.GL4;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 
 import java.awt.*;
@@ -92,7 +88,7 @@ public class SimpleScene {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
         frame.setResizable(false);
-        frame.setUndecorated(true);
+        //frame.setUndecorated(true);
         //frame.setAlwaysOnTop(true);
 
         // OpenGL-Canvas hinzufuegen

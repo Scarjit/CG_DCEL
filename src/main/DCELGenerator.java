@@ -77,13 +77,17 @@ public class DCELGenerator {
 		ArrayList<float[]> triangle = new ArrayList<float[]>();
 		float[] cross1 = new float[3];
 		float[] cross2 = new float[3];
-		float[] vResult = new float[3];
+		float[] vResult;
 
 
 		for (DCELFace face : faceArray) {
-			triangle.add(0, face.getHalfEdge().getOrigin().getPosition());
-			triangle.add(1, face.getHalfEdge().getNext().getOrigin().getPosition());
-			triangle.add(2, face.getHalfEdge().getPrev().getOrigin().getPosition());
+
+			triangle.clear();
+			vResult = new float[3];
+
+			triangle.add(face.getHalfEdge().getOrigin().getPosition());
+			triangle.add(face.getHalfEdge().getNext().getOrigin().getPosition());
+			triangle.add(face.getHalfEdge().getPrev().getOrigin().getPosition());
 			/*System.out.println("origin: " + Arrays.toString(triangle.get(0)));
 			System.out.println("next:   " + Arrays.toString(triangle.get(1)));
 			System.out.println("prev:   " + Arrays.toString(triangle.get(2)));*/
@@ -119,13 +123,32 @@ public class DCELGenerator {
 
 			do {
 
-				//System.out.println(face.toString());
-				currHalfEdge.getOrigin().addFaceNormal(vResult);
+				//System.out.println("punkt: " + Arrays.toString(currHalfEdge.getOrigin().getPosition()));
+
+
+				for (DCELVertex vertex : vertexArray) {
+					if (vertex.getPosition() == currHalfEdge.getOrigin().getPosition()) {
+						//currHalfEdge.getOrigin().addFaceNormal(vResult);
+						vertex.addFaceNormal(vResult);
+					}
+				}
+
+				/*for (float[] faceNormal: currHalfEdge.getOrigin().getFaceNormals()) {
+					System.out.println(Arrays.toString(faceNormal));
+				}*/
+
 
 				currHalfEdge = currHalfEdge.getNext();
 			} while ((face.getHalfEdge() != currHalfEdge));
 		}
 
+		/*for (DCELVertex vertex: vertexArray) {
+			System.out.println("punkt" + Arrays.toString(vertex.getPosition()));
+			for (float[] faceNormal: vertex.getFaceNormals()) {
+				System.out.println(Arrays.toString(faceNormal));
+				//System.out.println(vertex.getFaceNormals());
+			}
+		}*/
 	}
 
 	private static float[] crossProduct(float[] v1, float[] v2, float[] vR) {
