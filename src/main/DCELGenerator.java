@@ -1,32 +1,31 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class DCELGenerator {
 
-	static int n_vertex = 0;
-	static int n_face = 0;
-	static int n_edge = 0;
+	private static int n_vertex = 0;
+	private static int n_face = 0;
+	private static int n_edge = 0;
 
-	static int vertex_properties = 0;
-	static int face_properties = 0;
-	static int edge_properties = 0;
+	private static int vertex_properties = 0;
+	private static int face_properties = 0;
+	private static int edge_properties = 0;
 
-	static int header_lenght = 0;
+	private static int header_lenght = 0;
 
-	static ArrayList<String> vertexArrayString;
-	static ArrayList<String> faceArrayString;
-	static ArrayList<String> edgeArrayString;
-	static String sort = "";
+	private static ArrayList<String> vertexArrayString;
+	private static ArrayList<String> faceArrayString;
+	private static ArrayList<String> edgeArrayString;
+	private static String sort = "";
 
-	static ArrayList<DCELVertex> vertexArray = new ArrayList<DCELVertex>();
-	static ArrayList<DCELFace> faceArray = new ArrayList<DCELFace>();
-	static ArrayList<DCELHalfEdge> edgeArray = new ArrayList<DCELHalfEdge>();
-	static ArrayList<Integer[]> indicesForEdges = new ArrayList<Integer[]>();
+	private static ArrayList<DCELVertex> vertexArray = new ArrayList<DCELVertex>();
+	private static ArrayList<DCELFace> faceArray = new ArrayList<DCELFace>();
+	private static ArrayList<DCELHalfEdge> edgeArray = new ArrayList<DCELHalfEdge>();
+	private static ArrayList<Integer[]> indicesForEdges = new ArrayList<Integer[]>();
 
 	public static DCELMesh generate(DCELMesh mesh) {
 		compileHeader();
@@ -35,7 +34,7 @@ public class DCELGenerator {
 		System.out.println("//////Face//////");
 		faceArrayString = getFace();
 		System.out.println("//////Edge//////");
-		edgeArrayString = getEdge();
+		edgeArrayString = new ArrayList<String>();
 		System.out.println("//////File Info//////");
 		System.out.println("Vertex: " + n_vertex);
 		System.out.println("Face: " + n_face);
@@ -54,146 +53,37 @@ public class DCELGenerator {
 		setPrevEdge();
 		setTwinEdge();
 		setRandomHalfEdgeToVertex();
-		setFaceNormal();
-		setVertexNormal();
 
 		mesh.setVertices(vertexArray);
 		mesh.setEdges(edgeArray);
 		mesh.setFaces(faceArray);
 		mesh.setIndicesForEdges(indicesForEdges);
 
-		//System.out.println(vertexArray.toString());
-
 		return mesh;
 	}
 
-	private static void setVertexNormal() {
-
-
-	}
-
-	private static void setFaceNormal() {
-
-		ArrayList<float[]> triangle = new ArrayList<float[]>();
-		float[] cross1 = new float[3];
-		float[] cross2 = new float[3];
-		float[] vResult;
-
-
-		for (DCELFace face : faceArray) {
-
-			triangle.clear();
-			vResult = new float[3];
-
-			triangle.add(face.getHalfEdge().getOrigin().getPosition());
-			triangle.add(face.getHalfEdge().getNext().getOrigin().getPosition());
-			triangle.add(face.getHalfEdge().getPrev().getOrigin().getPosition());
-			/*System.out.println("origin: " + Arrays.toString(triangle.get(0)));
-			System.out.println("next:   " + Arrays.toString(triangle.get(1)));
-			System.out.println("prev:   " + Arrays.toString(triangle.get(2)));*/
-
-
-			float x1 = triangle.get(0)[0];
-			float y1 = triangle.get(0)[1];
-			float z1 = triangle.get(0)[2];
-
-			float x2 = triangle.get(1)[0];
-			float y2 = triangle.get(1)[1];
-			float z2 = triangle.get(1)[2];
-
-			float x3 = triangle.get(2)[0];
-			float y3 = triangle.get(2)[1];
-			float z3 = triangle.get(2)[2];
-
-			cross1[0] = x2 - x1;
-			cross1[1] = y2 - y1;
-			cross1[2] = z2 - z1;
-
-			cross2[0] = x3 - x1;
-			cross2[1] = y3 - y1;
-			cross2[2] = z3 - z1;
-
-			vResult = crossProduct(cross1, cross2, vResult);
-
-			face.setFaceNormal(vResult);
-
-			DCELHalfEdge currHalfEdge = face.getHalfEdge();
-
-			System.out.println(Arrays.toString(vResult));
-
-			do {
-
-				//System.out.println("punkt: " + Arrays.toString(currHalfEdge.getOrigin().getPosition()));
-
-
-				for (DCELVertex vertex : vertexArray) {
-					if (vertex.getPosition() == currHalfEdge.getOrigin().getPosition()) {
-						//currHalfEdge.getOrigin().addFaceNormal(vResult);
-						vertex.addFaceNormal(vResult);
-					}
-				}
-
-				/*for (float[] faceNormal: currHalfEdge.getOrigin().getFaceNormals()) {
-					System.out.println(Arrays.toString(faceNormal));
-				}*/
-
-
-				currHalfEdge = currHalfEdge.getNext();
-			} while ((face.getHalfEdge() != currHalfEdge));
-		}
-
-		/*for (DCELVertex vertex: vertexArray) {
-			System.out.println("punkt" + Arrays.toString(vertex.getPosition()));
-			for (float[] faceNormal: vertex.getFaceNormals()) {
-				System.out.println(Arrays.toString(faceNormal));
-				//System.out.println(vertex.getFaceNormals());
-			}
-		}*/
-	}
-
-	private static float[] crossProduct(float[] v1, float[] v2, float[] vR) {
-
-		vR[0] = ((v1[1] * v2[2]) - (v1[2] * v2[1]));
-		vR[1] = -((v1[0] * v2[2]) - (v1[2] * v2[0]));
-		vR[2] = ((v1[0] * v2[1]) - (v1[1] * v2[0]));
-
-		return vR;
-	}
-
 	private static void setRandomHalfEdgeToVertex() {
-		for (int i = 0; i < vertexArray.size(); i++) {
-			DCELVertex currentVertex = vertexArray.get(i);
-			for (int j = 0; j < edgeArray.size(); j++) {
-				DCELHalfEdge currentEdge = edgeArray.get(j);
+		vertexArray.forEach(currentVertex -> {
+			for (DCELHalfEdge currentEdge : edgeArray) {
 				if (currentEdge.getOrigin().equals(currentVertex)) {
 					currentVertex.setHalfEdge(currentEdge);
 					break;
 				}
 			}
-		}
+		});
 	}
+
 
 	private static void setTwinEdge() {
 		for (int i = 0; i < edgeArray.size(); i++) {
 			DCELHalfEdge currentEdge = edgeArray.get(i);
-			for (int j = 0; j < edgeArray.size(); j++) {
-				DCELHalfEdge testTwin = edgeArray.get(j);
+			edgeArray.forEach(testTwin -> {
 				if (!testTwin.equals(currentEdge)
-						&& currentEdge.getNext().getOrigin() == testTwin
-						.getOrigin() && currentEdge.getOrigin() == testTwin
-						.getNext().getOrigin()) {
+						&& currentEdge.getNext().getOrigin() == testTwin.getOrigin()
+						&& currentEdge.getOrigin() == testTwin.getNext().getOrigin()) {
 					currentEdge.setTwin(testTwin);
-					/*System.out.println(
-							"Found Twin: " + currentEdge.getId() + " : "
-									+ testTwin.getId());
-					System.out
-							.println(currentEdge.getNext().getOrigin().getId());
-					System.out.println(testTwin.getOrigin().getId());*/
-				} else {
-					//System.out.println(testTwin.getId() + " is not twin of: " + currentEdge.getId());
 				}
-
-			}
+			});
 		}
 	}
 
@@ -202,23 +92,21 @@ public class DCELGenerator {
 		for (int i = edgeArray.size() - 1; i >= 0; i--) {
 			DCELHalfEdge currentEdge = edgeArray.get(i);
 			DCELHalfEdge prevInList;
+
 			try {
 				prevInList = edgeArray.get(i - 1);
 			} catch (Exception ex) {
 				prevInList = startOfFace;
 			}
+
 			if (startOfFace == null || !startOfFace.getFace()
 					.equals(currentEdge.getFace())) {
 				startOfFace = currentEdge;
 			}
 
 			if (prevInList.getFace().equals(currentEdge.getFace())) {
-				/*System.out.println("Current: " + currentEdge.getId() + " Prev: "
-						+ prevInList.getId() + " (Same Face)");*/
 				currentEdge.setPrev(prevInList);
 			} else {
-				/*System.out.println("Current: " + currentEdge.getId() + " Prev: "
-						+ startOfFace.getId());*/
 				currentEdge.setPrev(startOfFace);
 			}
 		}
@@ -229,23 +117,21 @@ public class DCELGenerator {
 		for (int i = 0; i < edgeArray.size(); i++) {
 			DCELHalfEdge currentEdge = edgeArray.get(i);
 			DCELHalfEdge nextInList;
+
 			try {
 				nextInList = edgeArray.get(i + 1);
 			} catch (Exception ex) {
 				nextInList = startOfFace;
 			}
+
 			if (startOfFace == null || !startOfFace.getFace()
 					.equals(currentEdge.getFace())) {
 				startOfFace = currentEdge;
 			}
 
 			if (nextInList.getFace().equals(currentEdge.getFace())) {
-				/*System.out.println("Current: " + currentEdge.getId() + " Next: "
-						+ nextInList.getId() + " (Same Face)");*/
 				currentEdge.setNext(nextInList);
 			} else {
-				/*System.out.println("Current: " + currentEdge.getId() + " Next: "
-						+ startOfFace.getId());*/
 				currentEdge.setNext(startOfFace);
 			}
 		}
@@ -262,16 +148,14 @@ public class DCELGenerator {
 			for (int j = 0; j < positions[0]; j++) {
 				DCELHalfEdge currentEdge = edgeArray.get(offset + j);
 				currentEdge.setFace(face);
-				/*System.out.println(
-						"Added Face: " + face.getId() + " to " + cEdge.getId());*/
 			}
 			offset = offset + positions[0];
 		}
 	}
 
 	private static void generateEdgeStringFromFace() {
-		for (int i = 0; i < faceArrayString.size(); i++) {
-			int[] positions = StringToIntN(faceArrayString.get(i));
+		faceArrayString.forEach(aFaceArrayString -> {
+			int[] positions = StringToIntN(aFaceArrayString);
 			for (int j = 1; j < positions.length; j++) {
 				if (j < positions.length - 1) {
 					edgeArrayString.add(positions[j] + " " + positions[j + 1]);
@@ -279,18 +163,12 @@ public class DCELGenerator {
 					edgeArrayString.add(positions[j] + " " + positions[1]);
 				}
 			}
-		}
+		});
 	}
 
 	private static void generateEdge() {
-		Map<DCELHalfEdge, int[]> tempHalfEdgeList = new HashMap<>();
 		for (int i = 0; i < edgeArrayString.size(); i++) {
 			int[] position = StringToIntN(edgeArrayString.get(i));
-			/*System.out.println(
-					"Edge " + i + " connects " + position[0] + " and "
-							+ position[1])*/
-
-
 			if (position[0] < position[1]) {
 				Integer[] indice = new Integer[2];
 				indice[0] = position[0];
@@ -298,18 +176,9 @@ public class DCELGenerator {
 				indicesForEdges.add(indice);
 			}
 
-			DCELHalfEdge currentEdge = new DCELHalfEdge(null, null, null,
-					vertexArray.get(position[0]), null);
-			tempHalfEdgeList.put(currentEdge, position);
+			DCELHalfEdge currentEdge = new DCELHalfEdge(null, null, null, vertexArray.get(position[0]), null);
 			currentEdge.setId(i);
 			edgeArray.add(currentEdge);
-		}
-
-
-		//TODO: unötig oder?:
-		for (int i = 0; i < edgeArray.size(); i++) {
-			DCELHalfEdge currentEdge = edgeArray.get(i);
-			int[] currentPos = tempHalfEdgeList.get(currentEdge);
 		}
 	}
 
@@ -320,9 +189,6 @@ public class DCELGenerator {
 			DCELVertex currentVertex = new DCELVertex(position, customData, null);
 			currentVertex.setId(i);
 			vertexArray.add(currentVertex);
-			/*System.out.println(
-					"Added Vertex @: " + postion[0] + " : " + postion[1] + " : "
-							+ postion[2] + " || " + vertexArrayString.get(i));*/
 		}
 	}
 
@@ -390,41 +256,13 @@ public class DCELGenerator {
 		return fArray;
 	}
 
-	private static ArrayList<String> getEdge() {
-		return new ArrayList<String>();
-		/*
-		ArrayList<String> eArray = new ArrayList<String>();
-		int offset = header_lenght + 1;
-		if (sort.charAt(0) == 'v') {
-			offset += n_vertex;
-			if (sort.charAt(1) == 'f') {
-				offset += n_face;
-			}
-		}
-		if (sort.charAt(0) == 'f') {
-			offset += n_face;
-			if (sort.charAt(1) == 'v') {
-				offset += n_vertex;
-			}
-		}
-		int length = offset + n_edge;
-		for (int i = offset; i < length; i++) {
-			String line = Loader.file.get(i);
-			eArray.add(line);
-			System.out.println(line);
-		}
-		return eArray;
-		*/
-	}
-
 	private static void compileHeader() {
 		ArrayList<String> header = Loader.getHeader();
 		header_lenght = header.size();
 		boolean is_vertex_prop = false;
 		boolean is_face_prop = false;
 		boolean is_edge_prop = false;
-		for (int i = 0; i < header.size(); i++) {
-			String line = header.get(i);
+		for (String line : header) {
 			if (line.contains("element vertex")) {
 				line = line.substring("element vertex ".length());
 				n_vertex = Integer.parseInt(line);

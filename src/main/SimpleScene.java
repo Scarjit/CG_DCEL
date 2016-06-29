@@ -62,7 +62,8 @@ public class SimpleScene {
 
         // create the camera
 
-        float largestCoordNum = 0;
+        float largestCoordNum = Integer.MIN_VALUE;
+        float smallestCoordNum = Integer.MAX_VALUE;
 
         for (float vertex : myGeometry.getVertices().array()) {
             if (vertex > largestCoordNum) {
@@ -70,9 +71,15 @@ public class SimpleScene {
             }
         }
 
-        System.out.println("largestCoordNum = " + largestCoordNum);
+        for (float vertex : myGeometry.getVertices().array()) {
+            if (vertex < smallestCoordNum) {
+                smallestCoordNum = vertex;
+            }
+        }
 
-        myCamera = new Camera(-largestCoordNum / 2, -largestCoordNum / 2, largestCoordNum / 2);
+        float middle = (Math.abs(largestCoordNum) + Math.abs(smallestCoordNum)) / 2;
+
+        myCamera = new Camera(-middle, -middle, middle * 3);
 
         myShader = new Shader();
 
@@ -85,11 +92,11 @@ public class SimpleScene {
         // Erstellen des Hauptfensters
         Frame frame = new Frame("HTWK Computergrafik");
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        frame.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
-        frame.setResizable(false);
-        //frame.setUndecorated(true);
-        //frame.setAlwaysOnTop(true);
+        //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        //frame.setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
+
+        frame.setSize(1000, 1000);
+        frame.setAlwaysOnTop(true);
 
         // OpenGL-Canvas hinzufuegen
         frame.add(glcanvas);
@@ -180,19 +187,20 @@ public class SimpleScene {
 
 
         float finalLargestCoordNum = largestCoordNum;
+
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
 
                 int keyCode = e.getKeyCode();
 
-                float moveX = myCamera.getModelViewMatrix().array()[12];
-                float moveY = myCamera.getModelViewMatrix().array()[13];
-                float moveZ = myCamera.getModelViewMatrix().array()[14];
+                float[] mvmatrix = myCamera.getModelViewMatrix().array();
 
-                float moveStep = finalLargestCoordNum / 100;
+                float moveX = mvmatrix[12];
+                float moveY = mvmatrix[13];
+                float moveZ = mvmatrix[14];
 
-                //System.out.println(moveStep);
+                float moveStep = finalLargestCoordNum / 50;
 
                 switch (keyCode) {
                     case KeyEvent.VK_UP:
@@ -211,18 +219,20 @@ public class SimpleScene {
                         myCamera.setModelViewMatrix(moveX - moveStep, moveY, moveZ);
                         glcanvas.display();
                         break;
-
                 }
-
             }
         });
 
 
         frame.addMouseWheelListener(e -> {
-            float moveX = myCamera.getModelViewMatrix().array()[12];
-            float moveY = myCamera.getModelViewMatrix().array()[13];
-            float moveZ = myCamera.getModelViewMatrix().array()[14];
-            float moveStep = finalLargestCoordNum / 100;
+
+            float[] mvmatrix = myCamera.getModelViewMatrix().array();
+
+            float moveX = mvmatrix[12];
+            float moveY = mvmatrix[13];
+            float moveZ = mvmatrix[14];
+
+            float moveStep = finalLargestCoordNum / 50;
 
             if (e.getWheelRotation() == -1) {
                 myCamera.setModelViewMatrix(moveX, moveY, moveZ - moveStep);
